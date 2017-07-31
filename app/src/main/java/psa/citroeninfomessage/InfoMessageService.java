@@ -74,7 +74,7 @@ public class InfoMessageService extends Service {
             int indexID     = ID.indexOf(key);
 
 //            Log.d(LOG_TAG, "prevValue: " + msgHistory[indexID >= 0 ? indexID : 0]);
-            Log.d(LOG_TAG, "key: " + key + " value: " + value);
+//            Log.d(LOG_TAG, "key: " + key + " value: " + value);
 
             if (indexID >= 0) {
                 if (indexID == 2 || !value.equals(msgHistory[indexID])) {
@@ -168,11 +168,11 @@ public class InfoMessageService extends Service {
 
     private void prepare_0e1(byte[] data){
         int rear_left   = convertParking((data[3]>>5) & 0x07);
-        int rear_center = convertParking((data[3]>>3) & 0x07);
+        int rear_center = convertParking((data[3]>>2) & 0x07);
         int rear_right  = convertParking((data[4]>>5) & 0x07);
 
-        Log.d(LOG_TAG, "rl: " + data[3] + " rc: " + data[3] + " rr: " + data[4]);
-        Log.d(LOG_TAG, "rl: " + (data[3]>>5) + " rc: " + (data[3]<<3) + " rr: " + (data[4]>>5));
+//        Log.d(LOG_TAG, "rl: " + data[3] + " rc: " + data[3] + " rr: " + data[4]);
+//        Log.d(LOG_TAG, "rl: " + ((data[3]>>5) & 0x07) + " rc: " + ((data[3]>>2) & 0x07) + " rr: " + ((data[4]>>5) & 0x07));
         Log.d(LOG_TAG, "rl: " + rear_left + " rc: " + rear_center + " rr: " + rear_right);
 
         intentBroadcastParking.putExtra(ParkingActivity.RL_SENSOR, rear_left);
