@@ -1,3 +1,27 @@
 <resources>
-    <string name="app_name">CitroenInfoMessage</string>
+    <string name="app_name">CitroenParking</string>
+    <string name="rr_05">RR_05</string>
+    <string name="rr_04">RR_04</string>
+    <string name="rr_03">RR_03</string>
+    <string name="rr_02">RR_02</string>
+    <string name="rr_01">RR_01</string>
+    <string name="rr_background">RR_background</string>
+    <string name="rrc_05">RRC_05</string>
+    <string name="rrc_04">RRC_04</string>
+    <string name="rrc_03">RRC_03</string>
+    <string name="rrc_02">RRC_02</string>
+    <string name="rrc_01">RRC_01</string>
+    <string name="rrc_background">RRC_background</string>
+    <string name="rlc_05">RLC_05</string>
+    <string name="rlc_04">RLC_04</string>
+    <string name="rlc_03">RLC_03</string>
+    <string name="rlc_02">RLC_02</string>
+    <string name="rlc_01">RLC_01</string>
+    <string name="rlc_background">RLC_background</string>
+    <string name="rl_05">RL_05</string>
+    <string name="rl_04">RL_04</string>
+    <string name="rl_03">RL_03</string>
+    <string name="rl_02">RL_02</string>
+    <string name="rl_01">RL_01</string>
+    <string name="rl_background">RL_background</string>
 </resources>

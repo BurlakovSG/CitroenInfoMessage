@@ -1,4 +1,4 @@
-package psa.citroeninfomessage;
+package psa.citroenparking;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -23,26 +24,21 @@ public class ParkingActivity extends Activity {
 
     BroadcastReceiver br;
 
-    static ImageView    ivCar,
-                        ivRL_background,
-                        ivRL_01,
+    private ImageView   ivRL_01,
                         ivRL_02,
                         ivRL_03,
                         ivRL_04,
                         ivRL_05,
-                        ivRLC_background,
                         ivRLC_01,
                         ivRLC_02,
                         ivRLC_03,
                         ivRLC_04,
                         ivRLC_05,
-                        ivRRC_background,
                         ivRRC_01,
                         ivRRC_02,
                         ivRRC_03,
                         ivRRC_04,
                         ivRRC_05,
-                        ivRR_background,
                         ivRR_01,
                         ivRR_02,
                         ivRR_03,
@@ -56,30 +52,24 @@ public class ParkingActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_parking);
 
-        ivCar = (ImageView) findViewById(R.id.ivCar);
-
-        ivRL_background = (ImageView) findViewById(R.id.ivRL_background);
         ivRL_01 = (ImageView) findViewById(R.id.ivRL_01);
         ivRL_02 = (ImageView) findViewById(R.id.ivRL_02);
         ivRL_03 = (ImageView) findViewById(R.id.ivRL_03);
         ivRL_04 = (ImageView) findViewById(R.id.ivRL_04);
         ivRL_05 = (ImageView) findViewById(R.id.ivRL_05);
 
-        ivRLC_background = (ImageView) findViewById(R.id.ivRLC_background);
         ivRLC_01 = (ImageView) findViewById(R.id.ivRLC_01);
         ivRLC_02 = (ImageView) findViewById(R.id.ivRLC_02);
         ivRLC_03 = (ImageView) findViewById(R.id.ivRLC_03);
         ivRLC_04 = (ImageView) findViewById(R.id.ivRLC_04);
         ivRLC_05 = (ImageView) findViewById(R.id.ivRLC_05);
 
-        ivRRC_background = (ImageView) findViewById(R.id.ivRRC_background);
         ivRRC_01 = (ImageView) findViewById(R.id.ivRRC_01);
         ivRRC_02 = (ImageView) findViewById(R.id.ivRRC_02);
         ivRRC_03 = (ImageView) findViewById(R.id.ivRRC_03);
         ivRRC_04 = (ImageView) findViewById(R.id.ivRRC_04);
         ivRRC_05 = (ImageView) findViewById(R.id.ivRRC_05);
 
-        ivRR_background = (ImageView) findViewById(R.id.ivRR_background);
         ivRR_01 = (ImageView) findViewById(R.id.ivRR_01);
         ivRR_02 = (ImageView) findViewById(R.id.ivRR_02);
         ivRR_03 = (ImageView) findViewById(R.id.ivRR_03);
@@ -204,6 +194,15 @@ public class ParkingActivity extends Activity {
             }
         };
 
+        final Animation carAnimation = AnimationUtils.loadAnimation(this, R.anim.car_animation);
+        carAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
+        final Animation linesAnimation = AnimationUtils.loadAnimation(this, R.anim.lines_animation);
+        ConstraintLayout layout = (ConstraintLayout) findViewById(R.id.clLines);
+
+        ImageView ivCar = (ImageView) findViewById(R.id.ivCar);
+        ivCar.startAnimation(carAnimation);
+        layout.startAnimation(linesAnimation);
+
         IntentFilter intFilt = new IntentFilter(BROADCAST_REAR_PARKING);
         registerReceiver(br, intFilt);
     }
@@ -212,12 +211,6 @@ public class ParkingActivity extends Activity {
     protected void onStart() {
         super.onStart();
 
-        final Animation carAnimation = AnimationUtils.loadAnimation(this, R.anim.car_animation);
-        final Animation linesAnimation = AnimationUtils.loadAnimation(this, R.anim.lines_animation);
-        ConstraintLayout layout = (ConstraintLayout) findViewById(R.id.clLines);
-
-        ivCar.startAnimation(carAnimation);
-        layout.startAnimation(linesAnimation);
     }
 
     @Override

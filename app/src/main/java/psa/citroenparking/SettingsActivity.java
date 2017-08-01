@@ -1,4 +1,4 @@
-package psa.citroeninfomessage;
+package psa.citroenparking;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -23,6 +23,7 @@ public class SettingsActivity extends Activity {
                 // используем явный вызов службы
                 startService(
                         new Intent(SettingsActivity.this, InfoMessageService.class));
+                finish();
             }
         });
 

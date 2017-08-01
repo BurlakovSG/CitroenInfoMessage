@@ -1,4 +1,4 @@
-package psa.citroeninfomessage;
+package psa.citroenparking;
 
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -7,11 +7,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
 import android.util.Log;
-import android.view.View;
-
-import java.util.ArrayList;
-
-import static java.lang.Math.round;
 
 public class InfoMessageService extends Service {
     final String LOG_TAG = "myLogs";
