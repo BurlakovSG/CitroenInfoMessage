@@ -42,7 +42,7 @@ public class InfoMessageService extends Service {
         ID = new ArrayList<String>() {{
             add("1A1");
             add("0E1");
-            add("0F6");
+//            add("0F6");
         }};
 
         msgHistory = new String[ID.size()];
@@ -90,9 +90,9 @@ public class InfoMessageService extends Service {
                             break;
 
                         case "0E1": // parking
-                            if (reverse)
+//                            if (reverse)
                                 prepare_0e1(hexStringToByteArray(value));
-                            break;
+//                            break;
                     }
                 }
             }
@@ -100,7 +100,9 @@ public class InfoMessageService extends Service {
     };
 
     private void setFilter() {
-        IntentFilter filter = new IntentFilter("kg.serial.manager.command_received");
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("kg.serial.manager.command_received"); //SM 2
+        filter.addAction("kg.delletenebre.serial.NEW_DATA"); //SM 1
         registerReceiver(smReceiver, filter);
     }
 
@@ -166,20 +168,41 @@ public class InfoMessageService extends Service {
         }
     }
 
-    private void prepare_0e1(byte[] data){
-        int rear_left   = convertParking((data[3]>>5) & 0x07);
-        int rear_center = convertParking((data[3]>>2) & 0x07);
-        int rear_right  = convertParking((data[4]>>5) & 0x07);
+    private void prepare_0e1(byte[] data) {
+        if ((data[5]&0x02) != 0) {
+            if (!reverse) {
+                reverse = true;
+                showRearParking();
+            }
+            else {
+                int rear_left   = convertParking((data[3]>>5) & 0x07);
+                int rear_center = convertParking((data[3]>>2) & 0x07);
+                int rear_right  = convertParking((data[4]>>5) & 0x07);
 
-//        Log.d(LOG_TAG, "rl: " + data[3] + " rc: " + data[3] + " rr: " + data[4]);
-//        Log.d(LOG_TAG, "rl: " + ((data[3]>>5) & 0x07) + " rc: " + ((data[3]>>2) & 0x07) + " rr: " + ((data[4]>>5) & 0x07));
-        Log.d(LOG_TAG, "rl: " + rear_left + " rc: " + rear_center + " rr: " + rear_right);
-
-        intentBroadcastParking.putExtra(ParkingActivity.RL_SENSOR, rear_left);
-        intentBroadcastParking.putExtra(ParkingActivity.RLC_SENSOR, rear_center);
-        intentBroadcastParking.putExtra(ParkingActivity.RRC_SENSOR, rear_center);
-        intentBroadcastParking.putExtra(ParkingActivity.RR_SENSOR, rear_right);
-        sendBroadcast(intentBroadcastParking);
+                intentBroadcastParking.putExtra(ParkingActivity.RL_SENSOR, rear_left);
+                intentBroadcastParking.putExtra(ParkingActivity.RLC_SENSOR, rear_center);
+                intentBroadcastParking.putExtra(ParkingActivity.RRC_SENSOR, rear_center);
+                intentBroadcastParking.putExtra(ParkingActivity.RR_SENSOR, rear_right);
+                sendBroadcast(intentBroadcastParking);
+            }
+        }
+        else if (reverse) {
+            reverse = false;
+            closeRearParking();
+        }
+//        int rear_left   = convertParking((data[3]>>5) & 0x07);
+//        int rear_center = convertParking((data[3]>>2) & 0x07);
+//        int rear_right  = convertParking((data[4]>>5) & 0x07);
+//
+////        Log.d(LOG_TAG, "rl: " + data[3] + " rc: " + data[3] + " rr: " + data[4]);
+////        Log.d(LOG_TAG, "rl: " + ((data[3]>>5) & 0x07) + " rc: " + ((data[3]>>2) & 0x07) + " rr: " + ((data[4]>>5) & 0x07));
+//        Log.d(LOG_TAG, "rl: " + rear_left + " rc: " + rear_center + " rr: " + rear_right);
+//
+//        intentBroadcastParking.putExtra(ParkingActivity.RL_SENSOR, rear_left);
+//        intentBroadcastParking.putExtra(ParkingActivity.RLC_SENSOR, rear_center);
+//        intentBroadcastParking.putExtra(ParkingActivity.RRC_SENSOR, rear_center);
+//        intentBroadcastParking.putExtra(ParkingActivity.RR_SENSOR, rear_right);
+//        sendBroadcast(intentBroadcastParking);
     }
 
     private static int convertParking(int value) {
