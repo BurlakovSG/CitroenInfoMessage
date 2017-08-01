@@ -39,11 +39,6 @@
             android:exported="true" />
 
         <activity
-            android:name=".InfoActivity"
-            android:noHistory="true"
-            android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar" />
-
-        <activity
             android:name=".ParkingActivity"
             android:noHistory="true"
             android:theme="@android:style/Theme.DeviceDefault.NoActionBar" />
