@@ -196,6 +196,7 @@ public class ParkingActivity extends Activity {
 
         final Animation carAnimation = AnimationUtils.loadAnimation(this, R.anim.car_animation);
         carAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
+
         final Animation linesAnimation = AnimationUtils.loadAnimation(this, R.anim.lines_animation);
         ConstraintLayout layout = (ConstraintLayout) findViewById(R.id.clLines);
 
@@ -208,9 +209,9 @@ public class ParkingActivity extends Activity {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-
+    protected void onPause() {
+        super.onPause();
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
     @Override

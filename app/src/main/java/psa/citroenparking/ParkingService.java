@@ -1,5 +1,6 @@
 package psa.citroenparking;
 
+import android.app.ActivityOptions;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -73,7 +74,7 @@ public class ParkingService extends Service {
         intentRearParking.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intentRearParking.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         intentRearParking.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intentRearParking);
+        startActivity(intentRearParking, ActivityOptions.makeCustomAnimation(this, R.anim.fade_in, R.anim.fade_out).toBundle());
     }
 
     private void closeRearParking() {

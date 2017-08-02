@@ -2,6 +2,7 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/clParking"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="psa.citroenparking.ParkingActivity">
@@ -10,7 +11,7 @@
         android:id="@+id/ivCar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="car"
+        android:contentDescription="@string/car"
         android:src="@drawable/car"
         android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/guideline_h_car"
@@ -23,8 +24,8 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.6"
-        tools:layout_editor_absoluteY="317dp"
-        tools:layout_editor_absoluteX="0dp" />
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="317dp" />
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/clLines"
