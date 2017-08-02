@@ -22,7 +22,7 @@ public class SettingsActivity extends Activity {
             public void onClick(View view) {
                 // используем явный вызов службы
                 startService(
-                        new Intent(SettingsActivity.this, InfoMessageService.class));
+                        new Intent(SettingsActivity.this, ParkingService.class));
                 finish();
             }
         });
@@ -32,7 +32,7 @@ public class SettingsActivity extends Activity {
             @Override
             public void onClick(View view) {
                 stopService(
-                        new Intent(SettingsActivity.this, InfoMessageService.class));
+                        new Intent(SettingsActivity.this, ParkingService.class));
             }
         });
     }

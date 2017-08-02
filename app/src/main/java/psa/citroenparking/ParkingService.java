@@ -8,10 +8,9 @@ import android.content.IntentFilter;
 import android.os.IBinder;
 import android.util.Log;
 
-public class InfoMessageService extends Service {
+public class ParkingService extends Service {
     final String LOG_TAG = "myLogs";
 
-    private Context context;
     private Intent intentRearParking;
     private Intent intentBroadcastParking;
     private Boolean reverse = false;
@@ -19,11 +18,10 @@ public class InfoMessageService extends Service {
 
     @Override
     public void onCreate() {
-        this.context = this;
         super.onCreate();
         setFilter();
 
-        intentRearParking = new Intent(context, ParkingActivity.class);
+        intentRearParking = new Intent(this, ParkingActivity.class);
         intentBroadcastParking = new Intent(ParkingActivity.BROADCAST_REAR_PARKING);
 
         Log.d(LOG_TAG, "Service OnCreate");
@@ -56,7 +54,9 @@ public class InfoMessageService extends Service {
 
             switch (key) {
                 case "PARK": // parking
-                    prepare_parking(hexStringToByteArray(value));
+                    if ((value.length() == 8) && checkData(value)) {
+                        prepare_parking(hexStringToByteArray(value));
+                    }
                     break;
             }
         }
@@ -81,7 +81,7 @@ public class InfoMessageService extends Service {
             ParkingActivity.activity.finish();
     }
 
-    public static byte[] hexStringToByteArray(String s) {
+    private static byte[] hexStringToByteArray(String s) {
         int len = s.length();
         byte[] data = new byte[len/2];
 
@@ -90,6 +90,14 @@ public class InfoMessageService extends Service {
         }
 
         return data;
+    }
+
+    private static boolean checkData(String string) {
+        for (int i = 0; i < string.length(); i++) {
+            if (Character.digit(string.charAt(i), 16) == -1)
+                return false;
+        }
+        return true;
     }
 
     private void prepare_parking(byte[] data) {
