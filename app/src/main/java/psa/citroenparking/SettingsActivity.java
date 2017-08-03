@@ -16,8 +16,7 @@ public class SettingsActivity extends Activity {
         final Button btnStart = (Button) findViewById(R.id.button_start);
         final Button btnStop = (Button) findViewById(R.id.button_stop);
 
-        startService(
-                new Intent(SettingsActivity.this, ParkingService.class));
+        startService(new Intent(this, ParkingService.class));
         finish();
 
         // запуск службы
