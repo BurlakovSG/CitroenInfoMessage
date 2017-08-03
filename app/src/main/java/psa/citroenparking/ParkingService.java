@@ -1,6 +1,7 @@
 package psa.citroenparking;
 
 import android.app.ActivityOptions;
+import android.app.Notification;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -11,6 +12,8 @@ import android.util.Log;
 
 public class ParkingService extends Service {
     final String LOG_TAG = "myLogs";
+
+    public static final int DEFAULT_NOTIFICATION_ID = 101;
 
     private Intent intentRearParking;
     private Intent intentBroadcastParking;
@@ -25,6 +28,15 @@ public class ParkingService extends Service {
         intentRearParking = new Intent(this, ParkingActivity.class);
         intentBroadcastParking = new Intent(ParkingActivity.BROADCAST_REAR_PARKING);
 
+        Notification.Builder builder = new Notification.Builder(this)
+                .setSmallIcon(R.mipmap.ic_launcher);
+
+        Notification notification = builder.build();
+        startForeground(DEFAULT_NOTIFICATION_ID, notification);
+
+        Intent hideIntent = new Intent(this, HideNotificationService.class);
+        startService(hideIntent);
+
         Log.d(LOG_TAG, "Service OnCreate");
     }
 
@@ -37,6 +49,8 @@ public class ParkingService extends Service {
     public void onDestroy() {
         Log.d(LOG_TAG, "Service OnDestroy");
         super.onDestroy();
+        unregisterReceiver(smReceiver);
+        stopSelf();
     }
 
     @Override
