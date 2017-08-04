@@ -14,13 +14,12 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 public class ParkingActivity extends Activity {
-    public final static String BROADCAST_REAR_PARKING = "psa.citroeninfomessage.BROADCAST_REAR_PARKING";
+    public final static String BROADCAST_REAR_PARKING = "psa.citroenparking.BROADCAST_REAR_PARKING";
+    public final static String CLOSE_ACTIVITY = "psa.citroenparking.CLOSE_ACTIVITY";
     public final static String RL_SENSOR = "rl_sensor";
     public final static String RLC_SENSOR = "rlc_sensor";
     public final static String RRC_SENSOR = "rrc_sensor";
     public final static String RR_SENSOR = "rr_sensor";
-
-    static Activity activity;
 
     BroadcastReceiver br;
 
@@ -44,8 +43,6 @@ public class ParkingActivity extends Activity {
                         ivRR_03,
                         ivRR_04,
                         ivRR_05;
-
-    private int rl, rlc, rrc, rr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,121 +73,22 @@ public class ParkingActivity extends Activity {
         ivRR_04 = (ImageView) findViewById(R.id.ivRR_04);
         ivRR_05 = (ImageView) findViewById(R.id.ivRR_05);
 
-        activity = this;
-
-        rl = rlc = rrc = rr = 0;
-
         br = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                rl = intent.getIntExtra(RL_SENSOR, 0);
-                rlc = intent.getIntExtra(RLC_SENSOR, 0);
-                rrc = intent.getIntExtra(RRC_SENSOR, 0);
-                rr = intent.getIntExtra(RR_SENSOR, 0);
+                switch (intent.getAction()) {
+                    case BROADCAST_REAR_PARKING:
+                        changeLines( intent.getIntExtra(RL_SENSOR, 0),
+                                     intent.getIntExtra(RLC_SENSOR, 0),
+                                     intent.getIntExtra(RRC_SENSOR, 0),
+                                     intent.getIntExtra(RR_SENSOR, 0) );
+                        break;
 
-                // Rear left sensor
-                if (rl >= 1)
-                    ivRL_01.setVisibility(View.VISIBLE);
-                else
-                    ivRL_01.setVisibility(View.INVISIBLE);
+                    case CLOSE_ACTIVITY:
+                        finish();
+                }
 
-                if (rl >= 2)
-                    ivRL_02.setVisibility(View.VISIBLE);
-                else
-                    ivRL_02.setVisibility(View.INVISIBLE);
 
-                if (rl >= 3)
-                    ivRL_03.setVisibility(View.VISIBLE);
-                else
-                    ivRL_03.setVisibility(View.INVISIBLE);
-
-                if (rl >= 4)
-                    ivRL_04.setVisibility(View.VISIBLE);
-                else
-                    ivRL_04.setVisibility(View.INVISIBLE);
-
-                if (rl >= 5)
-                    ivRL_05.setVisibility(View.VISIBLE);
-                else
-                    ivRL_05.setVisibility(View.INVISIBLE);
-
-                // Rear left-center sensor
-                if (rlc >= 1)
-                    ivRLC_01.setVisibility(View.VISIBLE);
-                else
-                    ivRLC_01.setVisibility(View.INVISIBLE);
-
-                if (rlc >= 2)
-                    ivRLC_02.setVisibility(View.VISIBLE);
-                else
-                    ivRLC_02.setVisibility(View.INVISIBLE);
-
-                if (rlc >= 3)
-                    ivRLC_03.setVisibility(View.VISIBLE);
-                else
-                    ivRLC_03.setVisibility(View.INVISIBLE);
-
-                if (rlc >= 4)
-                    ivRLC_04.setVisibility(View.VISIBLE);
-                else
-                    ivRLC_04.setVisibility(View.INVISIBLE);
-
-                if (rlc >= 5)
-                    ivRLC_05.setVisibility(View.VISIBLE);
-                else
-                    ivRLC_05.setVisibility(View.INVISIBLE);
-
-                // Rear right-center sensor
-                if (rrc >= 1)
-                    ivRRC_01.setVisibility(View.VISIBLE);
-                else
-                    ivRRC_01.setVisibility(View.INVISIBLE);
-
-                if (rrc >= 2)
-                    ivRRC_02.setVisibility(View.VISIBLE);
-                else
-                    ivRRC_02.setVisibility(View.INVISIBLE);
-
-                if (rrc >= 3)
-                    ivRRC_03.setVisibility(View.VISIBLE);
-                else
-                    ivRRC_03.setVisibility(View.INVISIBLE);
-
-                if (rrc >= 4)
-                    ivRRC_04.setVisibility(View.VISIBLE);
-                else
-                    ivRRC_04.setVisibility(View.INVISIBLE);
-
-                if (rrc >= 5)
-                    ivRRC_05.setVisibility(View.VISIBLE);
-                else
-                    ivRRC_05.setVisibility(View.INVISIBLE);
-
-                // Rear right sensor
-                if (rr >= 1)
-                    ivRR_01.setVisibility(View.VISIBLE);
-                else
-                    ivRR_01.setVisibility(View.INVISIBLE);
-
-                if (rr >= 2)
-                    ivRR_02.setVisibility(View.VISIBLE);
-                else
-                    ivRR_02.setVisibility(View.INVISIBLE);
-
-                if (rr >= 3)
-                    ivRR_03.setVisibility(View.VISIBLE);
-                else
-                    ivRR_03.setVisibility(View.INVISIBLE);
-
-                if (rr >= 4)
-                    ivRR_04.setVisibility(View.VISIBLE);
-                else
-                    ivRR_04.setVisibility(View.INVISIBLE);
-
-                if (rr >= 5)
-                    ivRR_05.setVisibility(View.VISIBLE);
-                else
-                    ivRR_05.setVisibility(View.INVISIBLE);
             }
         };
 
@@ -203,20 +101,127 @@ public class ParkingActivity extends Activity {
         ImageView ivCar = (ImageView) findViewById(R.id.ivCar);
         ivCar.startAnimation(carAnimation);
         layout.startAnimation(linesAnimation);
+    }
 
-        IntentFilter intFilt = new IntentFilter(BROADCAST_REAR_PARKING);
-        registerReceiver(br, intFilt);
+    @Override
+    protected void onResume() {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(BROADCAST_REAR_PARKING);
+        filter.addAction(CLOSE_ACTIVITY);
+        registerReceiver(br, filter);
+        super.onResume();
+    }
+
+    protected void changeLines(int rl, int rlc, int rrc, int rr) {
+        // Rear left sensor
+        if (rl >= 1)
+            ivRL_01.setVisibility(View.VISIBLE);
+        else
+            ivRL_01.setVisibility(View.INVISIBLE);
+
+        if (rl >= 2)
+            ivRL_02.setVisibility(View.VISIBLE);
+        else
+            ivRL_02.setVisibility(View.INVISIBLE);
+
+        if (rl >= 3)
+            ivRL_03.setVisibility(View.VISIBLE);
+        else
+            ivRL_03.setVisibility(View.INVISIBLE);
+
+        if (rl >= 4)
+            ivRL_04.setVisibility(View.VISIBLE);
+        else
+            ivRL_04.setVisibility(View.INVISIBLE);
+
+        if (rl >= 5)
+            ivRL_05.setVisibility(View.VISIBLE);
+        else
+            ivRL_05.setVisibility(View.INVISIBLE);
+
+        // Rear left-center sensor
+        if (rlc >= 1)
+            ivRLC_01.setVisibility(View.VISIBLE);
+        else
+            ivRLC_01.setVisibility(View.INVISIBLE);
+
+        if (rlc >= 2)
+            ivRLC_02.setVisibility(View.VISIBLE);
+        else
+            ivRLC_02.setVisibility(View.INVISIBLE);
+
+        if (rlc >= 3)
+            ivRLC_03.setVisibility(View.VISIBLE);
+        else
+            ivRLC_03.setVisibility(View.INVISIBLE);
+
+        if (rlc >= 4)
+            ivRLC_04.setVisibility(View.VISIBLE);
+        else
+            ivRLC_04.setVisibility(View.INVISIBLE);
+
+        if (rlc >= 5)
+            ivRLC_05.setVisibility(View.VISIBLE);
+        else
+            ivRLC_05.setVisibility(View.INVISIBLE);
+
+        // Rear right-center sensor
+        if (rrc >= 1)
+            ivRRC_01.setVisibility(View.VISIBLE);
+        else
+            ivRRC_01.setVisibility(View.INVISIBLE);
+
+        if (rrc >= 2)
+            ivRRC_02.setVisibility(View.VISIBLE);
+        else
+            ivRRC_02.setVisibility(View.INVISIBLE);
+
+        if (rrc >= 3)
+            ivRRC_03.setVisibility(View.VISIBLE);
+        else
+            ivRRC_03.setVisibility(View.INVISIBLE);
+
+        if (rrc >= 4)
+            ivRRC_04.setVisibility(View.VISIBLE);
+        else
+            ivRRC_04.setVisibility(View.INVISIBLE);
+
+        if (rrc >= 5)
+            ivRRC_05.setVisibility(View.VISIBLE);
+        else
+            ivRRC_05.setVisibility(View.INVISIBLE);
+
+        // Rear right sensor
+        if (rr >= 1)
+            ivRR_01.setVisibility(View.VISIBLE);
+        else
+            ivRR_01.setVisibility(View.INVISIBLE);
+
+        if (rr >= 2)
+            ivRR_02.setVisibility(View.VISIBLE);
+        else
+            ivRR_02.setVisibility(View.INVISIBLE);
+
+        if (rr >= 3)
+            ivRR_03.setVisibility(View.VISIBLE);
+        else
+            ivRR_03.setVisibility(View.INVISIBLE);
+
+        if (rr >= 4)
+            ivRR_04.setVisibility(View.VISIBLE);
+        else
+            ivRR_04.setVisibility(View.INVISIBLE);
+
+        if (rr >= 5)
+            ivRR_05.setVisibility(View.VISIBLE);
+        else
+            ivRR_05.setVisibility(View.INVISIBLE);
     }
 
     @Override
     protected void onPause() {
+        unregisterReceiver(br);
         super.onPause();
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        unregisterReceiver(br);
     }
 }

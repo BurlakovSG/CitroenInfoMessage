@@ -92,8 +92,9 @@ public class ParkingService extends Service {
     }
 
     private void closeRearParking() {
-        if (ParkingActivity.activity != null)
-            ParkingActivity.activity.finish();
+//        if (ParkingActivity.activity != null)
+//            ParkingActivity.activity.finish();
+        sendBroadcast(new Intent(ParkingActivity.CLOSE_ACTIVITY));
     }
 
     private static byte[] hexStringToByteArray(String s) {

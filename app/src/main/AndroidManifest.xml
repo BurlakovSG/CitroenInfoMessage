@@ -43,8 +43,7 @@
 
         <service
             android:name=".HideNotificationService"
-            android:enabled="true"
-            android:exported="false"></service>
+            android:enabled="true" />
     </application>
 
 </manifest>
